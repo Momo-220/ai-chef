@@ -1019,8 +1019,19 @@ body.dark-mode .chef-hat-icon {
         --header-height: 60px;
     }
     
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        padding: 10px 16px;
+        background-color: var(--primary-beige);
+        width: 100%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
     .header-center h1 {
         font-size: 18px;
+        margin-bottom: 0;
     }
     
     .header-center p {
@@ -1031,9 +1042,14 @@ body.dark-mode .chef-hat-icon {
         width: 22px;
         height: 22px;
     }
+
+    .main-chat-container {
+        padding-top: var(--header-height);
+    }
     
     .chat-container {
         padding: 0 16px;
+        margin-top: 10px;
     }
     
     .message {
@@ -1088,9 +1104,14 @@ body.dark-mode .chef-hat-icon {
     }
     
     .chat-messages {
+        padding-top: 10px;
         padding-bottom: 70px;
         margin-bottom: 0;
     }
+}
+
+body.dark-mode header {
+    background-color: #252525;
 }
 
 @media (max-width: 360px) {
