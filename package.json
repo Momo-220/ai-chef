@@ -1,0 +1,12 @@
+{
+  "name": "chef-kawsar",
+  "version": "1.0.0",
+  "description": "Application Chef Kawsar",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve ."
+  },
+  "dependencies": {
+    "serve": "^14.0.0"
+  }
+} 
