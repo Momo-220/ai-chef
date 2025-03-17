@@ -1105,7 +1105,7 @@ body.dark-mode .chef-hat-icon {
         top: 0;
         left: 0;
         right: 0;
-        z-index: 50;
+        z-index: 1000;
         padding: calc(var(--safe-area-top)) 16px 10px;
         background-color: white;
         width: 100%;
@@ -1113,6 +1113,8 @@ body.dark-mode .chef-hat-icon {
         height: var(--header-total-height);
         display: flex;
         align-items: flex-end;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
 
     .main-chat-container {
@@ -1124,7 +1126,7 @@ body.dark-mode .chef-hat-icon {
         z-index: 1;
         background-color: var(--primary-beige);
     }
-    
+
     .chat-container {
         padding: 0 16px;
         height: calc(100% - var(--header-total-height));
@@ -1140,6 +1142,26 @@ body.dark-mode .chef-hat-icon {
         -webkit-overflow-scrolling: touch;
         height: auto;
     }
+
+    .typing-indicator {
+        position: relative;
+        z-index: 1;
+    }
+
+    .message {
+        position: relative;
+        z-index: 2;
+    }
+
+    .message.bot {
+        z-index: 3;
+    }
+
+    .message-content {
+        background-color: white;
+        position: relative;
+        z-index: 4;
+    }
 }
 
 /* Support pour les écrans à encoche (iPhone X et plus) */
@@ -1148,6 +1170,7 @@ body.dark-mode .chef-hat-icon {
         header {
             padding-top: env(safe-area-inset-top);
             height: calc(var(--header-height) + env(safe-area-inset-top));
+            background-color: rgba(255, 255, 255, 0.95);
         }
         
         .main-chat-container {
@@ -1159,7 +1182,7 @@ body.dark-mode .chef-hat-icon {
 /* Ajustements pour le mode sombre sur mobile */
 @media (max-width: 480px) {
     body.dark-mode header {
-        background-color: #252525;
+        background-color: rgba(37, 37, 37, 0.95);
     }
 }
 
