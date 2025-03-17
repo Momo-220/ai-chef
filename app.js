@@ -30,6 +30,62 @@ document.addEventListener('DOMContentLoaded', async () => {
             sidebar
         });
     }
+
+    const toggleSuggestionsBtn = document.querySelector('.toggle-suggestions-btn');
+    const suggestionsContainer = document.querySelector('.suggestions-container');
+    const toggleText = toggleSuggestionsBtn.querySelector('.toggle-text');
+
+    toggleSuggestionsBtn.addEventListener('click', () => {
+        const currentState = localStorage.getItem('suggestionsPanelState') || 'visible';
+        let newState;
+
+        // Rotation des états : visible -> collapsed-up -> collapsed-down -> visible
+        switch (currentState) {
+            case 'visible':
+                newState = 'collapsed-up';
+                suggestionsContainer.classList.add('collapsed-up');
+                suggestionsContainer.classList.remove('collapsed-down');
+                toggleText.textContent = 'Afficher en bas';
+                break;
+            case 'collapsed-up':
+                newState = 'collapsed-down';
+                suggestionsContainer.classList.remove('collapsed-up');
+                suggestionsContainer.classList.add('collapsed-down');
+                toggleText.textContent = 'Afficher en haut';
+                break;
+            case 'collapsed-down':
+            default:
+                newState = 'visible';
+                suggestionsContainer.classList.remove('collapsed-up');
+                suggestionsContainer.classList.remove('collapsed-down');
+                toggleText.textContent = 'Masquer';
+                break;
+        }
+
+        // Sauvegarder la préférence de l'utilisateur
+        localStorage.setItem('suggestionsPanelState', newState);
+    });
+
+    // Restaurer l'état précédent au chargement
+    const savedState = localStorage.getItem('suggestionsPanelState');
+    if (savedState) {
+        switch (savedState) {
+            case 'collapsed-up':
+                suggestionsContainer.classList.add('collapsed-up');
+                suggestionsContainer.classList.remove('collapsed-down');
+                toggleText.textContent = 'Afficher en bas';
+                break;
+            case 'collapsed-down':
+                suggestionsContainer.classList.remove('collapsed-up');
+                suggestionsContainer.classList.add('collapsed-down');
+                toggleText.textContent = 'Afficher en haut';
+                break;
+            default:
+                suggestionsContainer.classList.remove('collapsed-up');
+                suggestionsContainer.classList.remove('collapsed-down');
+                toggleText.textContent = 'Masquer';
+        }
+    }
 });
 
 class CuisineBot {
