@@ -773,6 +773,23 @@ main {
     .message {
         max-width: 100%;
     }
+
+    .suggestions-container {
+        max-height: 180px;
+        overflow-y: auto;
+    }
+
+    .suggestions-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .suggestion-pill {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
 }
 
 /* Typing indicator */
