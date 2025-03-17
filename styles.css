@@ -1017,18 +1017,21 @@ body.dark-mode .chef-hat-icon {
     :root {
         --sidebar-width: 85vw;
         --header-height: 60px;
+        --safe-area-top: env(safe-area-inset-top, 20px);
     }
     
     header {
-        position: sticky;
+        position: fixed;
         top: 0;
+        left: 0;
+        right: 0;
         z-index: 20;
-        padding: 10px 16px;
+        padding: calc(var(--safe-area-top) + 10px) 16px 10px;
         background-color: var(--primary-beige);
         width: 100%;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-    
+
     .header-center h1 {
         font-size: 18px;
         margin-bottom: 0;
@@ -1044,12 +1047,15 @@ body.dark-mode .chef-hat-icon {
     }
 
     .main-chat-container {
-        padding-top: var(--header-height);
+        padding-top: calc(var(--header-height) + var(--safe-area-top));
+        height: 100%;
+        overflow-y: auto;
     }
     
     .chat-container {
         padding: 0 16px;
         margin-top: 10px;
+        height: calc(100% - var(--header-height) - var(--safe-area-top));
     }
     
     .message {
@@ -1105,83 +1111,28 @@ body.dark-mode .chef-hat-icon {
     
     .chat-messages {
         padding-top: 10px;
-        padding-bottom: 70px;
+        padding-bottom: calc(70px + var(--safe-area-inset-bottom));
         margin-bottom: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Support pour les écrans à encoche (iPhone X et plus) */
+@supports (padding-top: env(safe-area-inset-top)) {
+    @media (max-width: 480px) {
+        header {
+            padding-top: max(env(safe-area-inset-top), 20px);
+        }
+        
+        .main-chat-container {
+            padding-top: calc(var(--header-height) + env(safe-area-inset-top));
+        }
     }
 }
 
 body.dark-mode header {
     background-color: #252525;
-}
-
-@media (max-width: 360px) {
-    .chat-input {
-        gap: 4px;
-        padding: 10px 8px;
-    }
-    
-    .feature-btn, .stop-generation, .send-btn {
-        width: 34px;
-        height: 34px;
-        min-width: 34px;
-        border-radius: 8px;
-    }
-    
-    .send-btn i, .feature-btn i, .stop-generation i {
-        font-size: 16px;
-    }
-    
-    #userInput {
-        padding: 8px 8px 8px 32px;
-        font-size: 13px;
-        height: 34px;
-    }
-    
-    .search-icon {
-        left: 10px;
-        font-size: 14px;
-    }
-}
-
-/* Ajustements pour les tablettes */
-@media (min-width: 481px) and (max-width: 768px) {
-    :root {
-        --sidebar-width: 280px;
-    }
-    
-    .header-center h1 {
-        font-size: 20px;
-    }
-    
-    .message {
-        max-width: 90%;
-    }
-}
-
-/* Ajustements pour les grands écrans */
-@media (min-width: 1400px) {
-    .container {
-        max-width: 1400px;
-    }
-    
-    .message {
-        max-width: 75%;
-    }
-}
-
-/* Ajustements pour les écrans très larges */
-@media (min-width: 1800px) {
-    .container {
-        max-width: 1600px;
-    }
-    
-    .message {
-        max-width: 65%;
-    }
-    
-    .chat-messages {
-        padding: 32px 0;
-    }
 }
 
 /* Ajustements pour les appareils en orientation paysage */
@@ -1191,66 +1142,7 @@ body.dark-mode header {
     }
     
     header {
-        padding: 8px 16px;
-    }
-    
-    .header-center h1 {
-        font-size: 18px;
-        margin-bottom: 0;
-    }
-    
-    .header-center p {
-        font-size: 12px;
-    }
-    
-    .chat-messages {
-        padding: 16px 0;
-    }
-    
-    .message {
-        margin-bottom: 12px;
-    }
-    
-    .chat-input {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: white;
-        z-index: 10;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-        padding: 8px 16px;
-        padding-bottom: calc(8px + var(--safe-area-inset-bottom));
-    }
-}
-
-/* Support pour les écrans à encoche (iPhone X et plus) */
-@supports (padding-top: env(safe-area-inset-top)) {
-    .app-wrapper {
-        padding-top: var(--safe-area-inset-top);
-        padding-bottom: var(--safe-area-inset-bottom);
-    }
-    
-    .chat-input {
-        padding-bottom: calc(16px + var(--safe-area-inset-bottom));
-    }
-}
-
-/* Ajustements pour les appareils à écran tactile */
-@media (hover: none) {
-    .message-content:hover {
-        transform: none;
-        box-shadow: 0 2px 12px var(--shadow-color);
-    }
-    
-    .suggestion-pill:active {
-        background-color: var(--secondary-beige);
-        transform: scale(0.98);
-    }
-    
-    .menu-toggle:active, .save-conversation:active {
-        background-color: rgba(139, 69, 19, 0.08);
-        transform: scale(0.95);
+        padding: calc(var(--safe-area-top) + 8px) 16px 8px;
     }
 }
 
