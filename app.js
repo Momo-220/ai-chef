@@ -11,26 +11,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialiser le chatbot
     new CuisineBot();
     
-    // Ajouter un gestionnaire d'événements direct pour le bouton de fermeture
-    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-    const sidebar = document.querySelector('.sidebar');
-    
-    if (closeSidebarBtn && sidebar) {
-        console.log('Initialisation directe du bouton de fermeture');
-        closeSidebarBtn.addEventListener('click', function(e) {
-            console.log('Clic direct sur le bouton de fermeture');
-            e.preventDefault();
-            e.stopPropagation();
-            sidebar.classList.remove('active');
-            document.body.classList.remove('sidebar-open');
-        });
-    } else {
-        console.error('Éléments non trouvés pour l\'initialisation directe:', {
-            closeSidebarBtn,
-            sidebar
-        });
-    }
-
     const toggleSuggestionsBtn = document.querySelector('.toggle-suggestions-btn');
     const suggestionsContainer = document.querySelector('.suggestions-container');
     const toggleText = toggleSuggestionsBtn.querySelector('.toggle-text');
@@ -126,6 +106,14 @@ class CuisineBot {
 
         // Gérer la hauteur sur mobile
         this.handleMobileHeight();
+
+        // Ajouter l'écouteur pour la hauteur mobile
+        window.addEventListener('resize', () => {
+            this.updateMobileHeight();
+        });
+        
+        // Initialiser la hauteur mobile
+        this.updateMobileHeight();
     }
 
     initializeEventListeners() {
@@ -142,14 +130,6 @@ class CuisineBot {
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.querySelector('.sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-        
-        console.log('Éléments du menu:', { 
-            menuToggle: menuToggle, 
-            sidebar: sidebar, 
-            sidebarOverlay: sidebarOverlay, 
-            closeSidebarBtn: closeSidebarBtn 
-        });
         
         // Fonction pour ouvrir la sidebar
         const openSidebar = () => {
@@ -176,18 +156,6 @@ class CuisineBot {
                     openSidebar();
                 }
             });
-        }
-        
-        // Bouton pour fermer le menu
-        if (closeSidebarBtn) {
-            closeSidebarBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('Bouton de fermeture cliqué');
-                closeSidebar();
-            });
-        } else {
-            console.error('Bouton de fermeture non trouvé dans le DOM');
         }
         
         // Fermer le menu en cliquant sur l'overlay
@@ -625,7 +593,16 @@ Question : ${userMessage}`
     }
 
     scrollToBottom() {
-        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+        if (this.chatMessages) {
+            const lastMessage = this.chatMessages.lastElementChild;
+            if (lastMessage) {
+                lastMessage.scrollIntoView({
+                    behavior: "auto",
+                    block: "end",
+                    inline: "nearest"
+                });
+            }
+        }
     }
 
     async addTypingIndicator() {
@@ -1064,4 +1041,92 @@ Question : ${userMessage}`
             }
         });
     }
-} 
+
+    // Ajout d'une fonction pour mettre à jour la hauteur sur mobile
+    updateMobileHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Recalculer la hauteur de la zone de messages
+        const chatMessages = document.querySelector('.chat-messages');
+        if (chatMessages) {
+            const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'));
+            const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top'));
+            const safeAreaBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom'));
+            
+            const totalHeight = window.innerHeight;
+            const messageAreaHeight = totalHeight - headerHeight - 80 - safeAreaTop - safeAreaBottom;
+            
+            chatMessages.style.height = `${messageAreaHeight}px`;
+        }
+    }
+}
+
+// Remplacer la classe SidebarManager par une version simplifiée
+function initializeSidebar() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    const closeBtn = document.querySelector('.close-sidebar');
+
+    // Fonction pour ouvrir la sidebar
+    function openSidebar() {
+        document.body.classList.add('sidebar-open');
+        console.log('Sidebar ouverte');
+    }
+
+    // Fonction pour fermer la sidebar
+    function closeSidebar() {
+        document.body.classList.remove('sidebar-open');
+        console.log('Sidebar fermée');
+    }
+
+    // Gestionnaire du bouton menu
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (document.body.classList.contains('sidebar-open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    // Gestionnaire du bouton fermer
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeSidebar();
+        });
+    }
+
+    // Gestionnaire de l'overlay
+    if (overlay) {
+        overlay.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeSidebar();
+        });
+    }
+
+    // Gestionnaire des touches clavier
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('sidebar-open')) {
+            closeSidebar();
+        }
+    });
+
+    // Empêcher la fermeture en cliquant dans la sidebar
+    if (sidebar) {
+        sidebar.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+}
+
+// Initialiser la sidebar au chargement du DOM
+document.addEventListener('DOMContentLoaded', () => {
+    initializeSidebar();
+}); 

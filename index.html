@@ -21,126 +21,119 @@
     </div>
     
     <div class="app-wrapper">
-        <!-- Sidebar pour les conversations sauvegardées -->
+        <!-- Overlay pour la sidebar -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Barre latérale -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
                     <img src="assets/chef-profile.jpg" alt="Chef Kawsar" class="logo-img">
                     <h2>Chef Kawsar</h2>
                 </div>
-                <button class="close-sidebar" id="closeSidebarBtn" title="Fermer la barre latérale">
-                    <i class="fas fa-times"></i> Fermer la barre latérale
-                </button>
                 <button class="new-chat-btn" id="newChatBtn">
-                    <i class="fas fa-plus"></i> Nouvelle discussion
+                    <i class="fas fa-plus"></i>
+                    Nouvelle discussion
                 </button>
             </div>
             
-            <div class="saved-conversations" id="savedConversations">
-                <h3><i class="fas fa-history"></i> Discussions récentes</h3>
+            <div class="saved-conversations">
+                <h3><i class="fas fa-bookmark"></i> Discussions sauvegardées</h3>
                 <div class="conversations-list" id="conversationsList">
-                    <!-- Les conversations sauvegardées seront ajoutées ici dynamiquement -->
-                    <div class="empty-state">
-                        <i class="fas fa-comment-dots"></i>
-                        <p>Aucune discussion sauvegardée</p>
-                    </div>
+                    <!-- Les conversations seront ajoutées ici dynamiquement -->
                 </div>
             </div>
             
             <div class="sidebar-footer">
-                <a href="index.html" class="back-to-home">
-                    <i class="fas fa-home"></i> Accueil
+                <a href="#" class="back-to-home">
+                    <i class="fas fa-home"></i>
+                    Accueil
                 </a>
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
         </aside>
-        
-        <!-- Overlay pour l'arrière-plan lorsque le menu est ouvert -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
         <!-- Contenu principal -->
-        <div class="main-chat-container">
-            <div class="container">
-                <header>
-                    <div class="header-left">
-                        <button class="menu-toggle" id="menuToggle">
-                            <i class="fas fa-bars"></i>
+        <main class="main-chat-container">
+            <header>
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                <div class="header-center">
+                    <h1>
+                        <svg class="chef-hat-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,2 C8.5,2 6,4.5 6,8 C6,8.3 6.1,8.7 6.1,9 C4.8,9.5 4,10.6 4,12 C4,13.7 5.3,15 7,15 L7,16 C7,18.2 9.8,20 12,20 C14.2,20 17,18.2 17,16 L17,15 C18.7,15 20,13.7 20,12 C20,10.6 19.2,9.5 17.9,9 C17.9,8.7 18,8.3 18,8 C18,4.5 15.5,2 12,2 Z"></path>
+                            <path d="M9,16 L15,16 L15,17 C15,17.6 14.6,18 14,18 L10,18 C9.4,18 9,17.6 9,17 L9,16 Z"></path>
+                            <path d="M8,21 L16,21 C16.6,21 17,21.4 17,22 L7,22 C7,21.4 7.4,21 8,21 Z"></path>
+                        </svg>
+                        Chef Kawsar
+                    </h1>
+                    <p>Votre Chef Personnelle 5 Étoiles</p>
+                </div>
+                <div class="header-right">
+                    <button class="save-conversation" id="saveConversationBtn" title="Sauvegarder cette conversation">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </header>
+
+            <main>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            <div class="bot-icon">
+                                <img src="assets/chef-profile.jpg" alt="Chef Kawsar">
+                            </div>
+                            <div class="message-content">
+                                <h3>Bonjour, je suis Chef Kawsar ! 👩‍🍳</h3>
+                                <p>Je peux vous aider à :</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Trouver des recettes</li>
+                                    <li><i class="fas fa-check"></i> Donner des conseils de cuisine</li>
+                                    <li><i class="fas fa-check"></i> Suggérer des alternatives aux ingrédients</li>
+                                    <li><i class="fas fa-check"></i> Calculer les portions</li>
+                                </ul>
+                                <p>Que puis-je faire pour vous aujourd'hui ?</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="suggestions-section">
+                        <div class="suggestions-header">
+                            <button class="toggle-suggestions-btn">
+                                <i class="fas fa-chevron-up"></i>
+                                <span class="toggle-text">Masquer</span>
+                            </button>
+                        </div>
+                        <div class="suggestions-container">
+                            <h4>Suggestions populaires :</h4>
+                            <div class="suggestions-grid">
+                                <!-- Les suggestions seront ajoutées dynamiquement -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <div class="input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="userInput" placeholder="Posez votre question culinaire...">
+                        </div>
+                        <button class="feature-btn" title="Commande vocale">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="stop-generation" title="Arrêter la génération">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button id="sendButton" class="send-btn pulse" title="Envoyer">
+                            <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
-                    <div class="header-center">
-                        <h1>
-                            <svg class="chef-hat-icon" width="24px" height="24px" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12,2 C8.5,2 6,4.5 6,8 C6,8.3 6.1,8.7 6.1,9 C4.8,9.5 4,10.6 4,12 C4,13.7 5.3,15 7,15 L7,16 C7,18.2 9.8,20 12,20 C14.2,20 17,18.2 17,16 L17,15 C18.7,15 20,13.7 20,12 C20,10.6 19.2,9.5 17.9,9 C17.9,8.7 18,8.3 18,8 C18,4.5 15.5,2 12,2 Z"></path>
-                                <path d="M9,16 L15,16 L15,17 C15,17.6 14.6,18 14,18 L10,18 C9.4,18 9,17.6 9,17 L9,16 Z"></path>
-                                <path d="M8,21 L16,21 C16.6,21 17,21.4 17,22 L7,22 C7,21.4 7.4,21 8,21 Z"></path>
-                            </svg>
-                            Chef Kawsar
-                        </h1>
-                        <p>Votre Chef Personnelle 5 Étoiles</p>
-                    </div>
-                    <div class="header-right">
-                        <button class="save-conversation" id="saveConversationBtn" title="Sauvegarder cette conversation">
-                            <i class="fas fa-bookmark"></i>
-                        </button>
-                    </div>
-                </header>
-
-                <main>
-                    <div class="chat-container">
-                        <div class="chat-messages" id="chatMessages">
-                            <div class="message bot">
-                                <div class="bot-icon">
-                                    <img src="assets/chef-profile.jpg" alt="Chef Kawsar">
-                                </div>
-                                <div class="message-content">
-                                    <h3>Bonjour, je suis Chef Kawsar ! 👩‍🍳</h3>
-                                    <p>Je peux vous aider à :</p>
-                                    <ul>
-                                        <li><i class="fas fa-check"></i> Trouver des recettes</li>
-                                        <li><i class="fas fa-check"></i> Donner des conseils de cuisine</li>
-                                        <li><i class="fas fa-check"></i> Suggérer des alternatives aux ingrédients</li>
-                                        <li><i class="fas fa-check"></i> Calculer les portions</li>
-                                    </ul>
-                                    <p>Que puis-je faire pour vous aujourd'hui ?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="suggestions-section">
-                            <div class="suggestions-header">
-                                <button class="toggle-suggestions-btn">
-                                    <i class="fas fa-chevron-up"></i>
-                                    <span class="toggle-text">Masquer</span>
-                                </button>
-                            </div>
-                            <div class="suggestions-container">
-                                <h4>Suggestions populaires :</h4>
-                                <div class="suggestions-grid">
-                                    <!-- Les suggestions seront ajoutées dynamiquement -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="chat-input">
-                            <div class="input-wrapper">
-                                <i class="fas fa-search search-icon"></i>
-                                <input type="text" id="userInput" placeholder="Posez votre question culinaire...">
-                            </div>
-                            <button class="feature-btn" title="Commande vocale">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <button class="stop-generation" title="Arrêter la génération">
-                                <i class="fas fa-stop"></i>
-                            </button>
-                            <button id="sendButton" class="send-btn pulse" title="Envoyer">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                </main>
-            </div>
+                </div>
+            </main>
         </div>
     </div>
     
