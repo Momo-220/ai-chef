@@ -103,17 +103,6 @@ class CuisineBot {
         // Ajouter le message de bienvenue à la conversation actuelle
         const welcomeMessage = this.chatMessages.querySelector('.message.bot .message-content').innerHTML;
         this.addMessageToCurrentConversation('bot', welcomeMessage);
-
-        // Gérer la hauteur sur mobile
-        this.handleMobileHeight();
-
-        // Ajouter l'écouteur pour la hauteur mobile
-        window.addEventListener('resize', () => {
-            this.updateMobileHeight();
-        });
-        
-        // Initialiser la hauteur mobile
-        this.updateMobileHeight();
     }
 
     initializeEventListeners() {
@@ -593,13 +582,18 @@ Question : ${userMessage}`
     }
 
     scrollToBottom() {
+        // Défilement doux vers le bas avec requestAnimationFrame pour de meilleures performances
         if (this.chatMessages) {
             const lastMessage = this.chatMessages.lastElementChild;
             if (lastMessage) {
-                lastMessage.scrollIntoView({
-                    behavior: "auto",
-                    block: "end",
-                    inline: "nearest"
+                // Utilisation de window.scrollTo pour défiler la page entière
+                const offsetTop = lastMessage.offsetTop;
+                const clientHeight = document.documentElement.clientHeight;
+                const scrollY = offsetTop - clientHeight + lastMessage.offsetHeight + 120;
+                
+                window.scrollTo({
+                    top: scrollY,
+                    behavior: 'smooth'
                 });
             }
         }
@@ -951,115 +945,6 @@ Question : ${userMessage}`
             }, 300);
         }, 3000);
     }
-
-    // Fonction pour gérer la hauteur de l'écran sur mobile
-    handleMobileHeight() {
-        // Définir la hauteur de l'écran pour les appareils mobiles (résout le problème de la barre d'adresse mobile)
-        const setAppHeight = () => {
-            const vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-            
-            // Ajuster la hauteur de l'app-wrapper
-            const appWrapper = document.querySelector('.app-wrapper');
-            if (appWrapper) {
-                appWrapper.style.height = `calc(var(--vh, 1vh) * 100)`;
-            }
-            
-            // Ajuster la hauteur des messages pour éviter qu'ils ne soient cachés par la zone de saisie
-            const chatMessages = document.querySelector('.chat-messages');
-            const chatInput = document.querySelector('.chat-input');
-            
-            if (chatMessages && chatInput && window.innerWidth <= 480) {
-                const inputHeight = chatInput.offsetHeight;
-                chatMessages.style.paddingBottom = `${inputHeight + 20}px`;
-            }
-        };
-        
-        // Exécuter au chargement
-        setAppHeight();
-        
-        // Exécuter lors du redimensionnement ou du changement d'orientation
-        window.addEventListener('resize', setAppHeight);
-        window.addEventListener('orientationchange', setAppHeight);
-        
-        // Gérer le clavier virtuel sur mobile
-        const handleKeyboard = () => {
-            const userInput = document.getElementById('userInput');
-            if (!userInput) return;
-            
-            userInput.addEventListener('focus', () => {
-                // Sur les appareils mobiles, faire défiler vers le champ de saisie
-                setTimeout(() => {
-                    // Faire défiler les messages vers le bas
-                    const chatMessages = document.querySelector('.chat-messages');
-                    if (chatMessages) {
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
-                    
-                    // Vérifier si nous sommes sur mobile
-                    if (window.innerWidth <= 768) {
-                        // Ajouter une classe pour indiquer que le clavier est ouvert
-                        document.body.classList.add('keyboard-open');
-                        
-                        // Ajuster la position de la zone de saisie
-                        const chatInput = document.querySelector('.chat-input');
-                        if (chatInput) {
-                            chatInput.style.position = 'sticky';
-                        }
-                    }
-                }, 300);
-            });
-            
-            userInput.addEventListener('blur', () => {
-                // Lorsque le focus est perdu, réinitialiser
-                document.body.classList.remove('keyboard-open');
-                
-                // Réinitialiser la position de la zone de saisie
-                const chatInput = document.querySelector('.chat-input');
-                if (chatInput && window.innerWidth <= 768) {
-                    chatInput.style.position = 'fixed';
-                    
-                    // Faire défiler vers le bas après la fermeture du clavier
-                    setTimeout(() => {
-                        window.scrollTo(0, 0);
-                        this.scrollToBottom();
-                    }, 100);
-                }
-            });
-        };
-        
-        handleKeyboard();
-        
-        // Détecter les changements de visibilité pour gérer le clavier
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && window.innerWidth <= 768) {
-                // Réinitialiser la vue lorsque l'utilisateur revient à l'application
-                setTimeout(() => {
-                    window.scrollTo(0, 0);
-                    this.scrollToBottom();
-                }, 100);
-            }
-        });
-    }
-
-    // Ajout d'une fonction pour mettre à jour la hauteur sur mobile
-    updateMobileHeight() {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        // Recalculer la hauteur de la zone de messages
-        const chatMessages = document.querySelector('.chat-messages');
-        if (chatMessages) {
-            const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'));
-            const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top'));
-            const safeAreaBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom'));
-            
-            const totalHeight = window.innerHeight;
-            const messageAreaHeight = totalHeight - headerHeight - 80 - safeAreaTop - safeAreaBottom;
-            
-            chatMessages.style.height = `${messageAreaHeight}px`;
-        }
-    }
 }
 
 // Remplacer la classe SidebarManager par une version simplifiée
@@ -1067,17 +952,36 @@ function initializeSidebar() {
     const menuToggle = document.querySelector('.menu-toggle');
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
-    const closeBtn = document.querySelector('.close-sidebar');
 
     // Fonction pour ouvrir la sidebar
     function openSidebar() {
         document.body.classList.add('sidebar-open');
+        
+        // Forcer la visibilité sur mobile
+        if (window.innerWidth <= 768) {
+            sidebar.style.visibility = 'visible';
+            sidebar.style.opacity = '1';
+            sidebar.style.left = '0';
+            
+            // Désactiver le défilement du body
+            document.body.style.overflow = 'hidden';
+            
+            // Forcer le rendu
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 50);
+        }
+        
         console.log('Sidebar ouverte');
     }
 
     // Fonction pour fermer la sidebar
     function closeSidebar() {
         document.body.classList.remove('sidebar-open');
+        
+        // Réactiver le défilement du body
+        document.body.style.overflow = '';
+        
         console.log('Sidebar fermée');
     }
 
@@ -1094,20 +998,18 @@ function initializeSidebar() {
         });
     }
 
-    // Gestionnaire du bouton fermer
-    if (closeBtn) {
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeSidebar();
-        });
-    }
-
     // Gestionnaire de l'overlay
     if (overlay) {
         overlay.addEventListener('click', (e) => {
             e.preventDefault();
             closeSidebar();
+        });
+    }
+
+    // Empêcher la fermeture en cliquant dans la sidebar
+    if (sidebar) {
+        sidebar.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     }
 
@@ -1117,13 +1019,6 @@ function initializeSidebar() {
             closeSidebar();
         }
     });
-
-    // Empêcher la fermeture en cliquant dans la sidebar
-    if (sidebar) {
-        sidebar.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    }
 }
 
 // Initialiser la sidebar au chargement du DOM
