@@ -488,12 +488,12 @@ body.dark-mode .chat-messages::-webkit-scrollbar-track {
 /* Optimisations pour mobile */
 @media (max-width: 768px) {
     .chat-input {
-        position: sticky;
+        position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        transform: none;
         width: 100%;
+        transform: none;
         padding: 12px var(--chat-padding);
         padding-bottom: max(12px, env(safe-area-inset-bottom));
         background-color: white;
@@ -502,37 +502,69 @@ body.dark-mode .chat-messages::-webkit-scrollbar-track {
         display: flex;
         align-items: center;
         gap: 8px;
+        border-radius: 0;
+        margin: 0;
     }
 
     .chat-container {
+        padding-bottom: 80px;
         min-height: 0;
         height: auto;
-        padding-bottom: 0;
     }
 
     .chat-messages {
-        min-height: calc(100vh - var(--header-height) - 80px);
-        height: auto;
         padding-bottom: 80px;
-    }
-
-    .input-wrapper {
-        min-width: 0;
-        flex: 1;
+        height: auto;
+        min-height: calc(100vh - var(--header-height) - 80px);
     }
 
     #userInput {
         width: 100%;
         min-width: 0;
+        height: 40px;
+        padding: 8px 12px 8px 36px;
+    }
+
+    .input-wrapper {
+        min-width: 0;
+        flex: 1;
+        height: 40px;
     }
 
     .feature-btn, 
     .stop-generation, 
     .send-btn {
-        flex-shrink: 0;
         width: 40px;
         height: 40px;
         min-width: 40px;
+        padding: 0;
+    }
+}
+
+/* Ajustements spécifiques pour Chrome sur Android */
+@supports (-webkit-touch-callout: none) {
+    .chat-input {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        will-change: transform;
+    }
+
+    body {
+        min-height: -webkit-fill-available;
+    }
+
+    .chat-container {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    }
+
+    .chat-messages {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
     }
 }
 
