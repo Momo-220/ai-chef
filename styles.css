@@ -499,7 +499,7 @@ body.dark-mode .chat-messages::-webkit-scrollbar-track {
         background-color: white;
         border-top: 1px solid var(--border-color);
         z-index: 1000;
-        display: flex;
+    display: flex;
         align-items: center;
         gap: 8px;
         border-radius: 0;
@@ -511,9 +511,9 @@ body.dark-mode .chat-messages::-webkit-scrollbar-track {
         padding-bottom: calc(80px + env(safe-area-inset-bottom));
         min-height: 0;
         height: auto;
-    }
+}
 
-    .chat-messages {
+.chat-messages {
         padding-bottom: calc(80px + env(safe-area-inset-bottom));
         height: auto;
         min-height: calc(100vh - var(--header-height) - 80px);
@@ -1399,7 +1399,7 @@ body.dark-mode .cancel-btn {
     .message.bot {
         z-index: 3;
     }
-
+    
     .message-content {
         background-color: white;
         position: relative;
@@ -1517,11 +1517,11 @@ body.dark-mode .chat-input {
     @media (max-width: 480px) {
         .chat-input {
             padding-bottom: max(12px, env(safe-area-inset-bottom));
-        }
     }
-    
-    @media (max-width: 360px) {
-        .chat-input {
+}
+
+@media (max-width: 360px) {
+    .chat-input {
             padding-bottom: max(10px, env(safe-area-inset-bottom));
         }
     }
@@ -1938,7 +1938,7 @@ body.dark-mode .chat-input {
 }
 
 /* Styles de base pour la section de saisie */
-.chat-input {
+    .chat-input {
     position: fixed;
     bottom: 0;
     left: 50%;
@@ -1961,7 +1961,7 @@ body.dark-mode .chat-input {
 
 /* Ajustements pour mobile en mode portrait */
 @media screen and (max-width: 768px) and (orientation: portrait) {
-    .chat-input {
+        .chat-input {
         position: fixed;
         bottom: 0;
         left: 0;
@@ -1991,7 +1991,7 @@ body.dark-mode .chat-input {
 
 /* Ajustements pour mobile en mode paysage */
 @media screen and (max-height: 500px) and (orientation: landscape) {
-    .chat-input {
+        .chat-input {
         position: fixed;
         bottom: 0;
         left: 0;
@@ -2048,10 +2048,10 @@ body.dark-mode .chat-input {
 }
 
 /* État avec clavier ouvert */
-body.keyboard-open .chat-input {
+    body.keyboard-open .chat-input {
     position: fixed;
     bottom: 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-}
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
 
 /* ... existing code ... */ 
