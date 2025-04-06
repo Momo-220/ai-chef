@@ -599,7 +599,9 @@ Question : ${userMessage}`
         }
     }
 
+    // Ajouter l'indicateur de frappe
     async addTypingIndicator() {
+        // Créer le message avec l'indicateur de frappe
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message bot typing';
         typingDiv.innerHTML = `
@@ -608,9 +610,7 @@ Question : ${userMessage}`
             </div>
             <div class="message-content">
                 <div class="typing-indicator">
-                    <span class="typing-dot"></span>
-                    <span class="typing-dot"></span>
-                    <span class="typing-dot"></span>
+                    <span></span>
                 </div>
             </div>
         `;
@@ -622,6 +622,7 @@ Question : ${userMessage}`
         const stopButton = document.querySelector('.stop-generation');
         stopButton.classList.add('visible');
 
+        // Attendre un court délai aléatoire pour simuler la réflexion
         await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 500));
     }
 
@@ -945,6 +946,37 @@ Question : ${userMessage}`
             }, 300);
         }, 3000);
     }
+
+    // Envoyer la requête à l'API
+    async sendRequest(message) {
+        try {
+            await this.addTypingIndicator();
+            
+            // Autres parties du code existant ...
+            
+            // Lorsque la réponse est reçue, supprimer l'indicateur de frappe
+            this.removeTypingIndicator();
+            
+            // Ajouter la réponse formatée
+            this.addBotMessage(formattedResponse);
+            
+            // Autres parties du code existant ...
+        } catch (error) {
+            console.error('Erreur lors de la requête API:', error);
+            
+            // En cas d'erreur, supprimer l'indicateur de frappe
+            this.removeTypingIndicator();
+            
+            // Afficher un message d'erreur
+            this.addBotMessage("Désolé, je n'ai pas pu traiter votre demande. Veuillez réessayer.");
+        } finally {
+            // Cacher le bouton d'arrêt
+            const stopButton = document.querySelector('.stop-generation');
+            stopButton.classList.remove('visible');
+            
+            this.isTyping = false;
+        }
+    }
 }
 
 // Remplacer la classe SidebarManager par une version simplifiée
@@ -1024,4 +1056,26 @@ function initializeSidebar() {
 // Initialiser la sidebar au chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
     initializeSidebar();
-}); 
+});
+
+// Fonction pour afficher l'indicateur de frappe
+function showTypingIndicator() {
+    if (document.querySelector('.typing-indicator')) return;
+    
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'typing-indicator';
+    
+    const textElement = document.createElement('span');
+    typingIndicator.appendChild(textElement);
+    
+    this.chatMessages.appendChild(typingIndicator);
+    scrollToBottom();
+}
+
+// Fonction pour masquer l'indicateur de frappe
+function hideTypingIndicator() {
+    const typingIndicator = document.querySelector('.typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
+} 
